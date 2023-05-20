@@ -12,6 +12,7 @@ const router = require('./Routes/Router')
 const app = express()
 const server = http.createServer(app)
 const io = socketIO(server, {cors: {origin: 'https://swap-book.vercel.app/'}})
+window.io.connect('https://swap-book.vercel.app/')
 
 const dbUri = process.env.DB_URI;
 
