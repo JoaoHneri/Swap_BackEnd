@@ -20,6 +20,14 @@ const Schema = new mongoose.Schema({
     type: String,
     required: true
   },
+  dateBirth:{
+    type: String,
+    required: true
+  },
+  gender:{
+    type: String,
+    required: true
+  },
 
   location: {
     type: PointSchema,

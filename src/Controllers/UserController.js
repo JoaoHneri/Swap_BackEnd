@@ -13,7 +13,7 @@ async function hashPassword(password) {
 
 
   const create = async (req, res) => {
-    const { name, email, password, phone, latitude, longitude } = req.body
+    const { name, email, password, phone, dateBirth, gender, latitude, longitude } = req.body
 
     const location = {
       type: 'Point',
@@ -30,6 +30,8 @@ async function hashPassword(password) {
         name,
         email,
         phone,
+        dateBirth,
+        gender,
         password: hashedPassword,
         location
       })
@@ -80,7 +82,7 @@ async function hashPassword(password) {
   const update = async(req, res) => {
     const { user_id } = req.params
     const { auth } = req.headers
-    const { name, email, password, phone, latitude, longitude } = req.body
+    const { name, email, password, phone, dateBirth, gender, latitude, longitude } = req.body
 
     const location = {
       type: 'Point',
@@ -102,6 +104,8 @@ async function hashPassword(password) {
         email,
         password: hashPassword,
         phone,
+        dateBirth,
+        gender,
         location
       }
 
