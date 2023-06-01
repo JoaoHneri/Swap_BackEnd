@@ -80,50 +80,18 @@ async function hashPassword(password) {
   }
 
   const update = async(req, res) => {
-    const { user_id } = req.params
-    const { auth } = req.headers
-    const { name, email, password, phone, dateBirth, gender, latitude, longitude } = req.body
+    const { user_id } = req.params;
+    const { auth } = req.headers;
+    const { name, email, password, phone, dateBirth, gender,} = req.body
 
-    const location = {
-      type: 'Point',
-      coordinates: [longitude, latitude]
-    }
+  if (user_id !== auth) return res.status(400).send({ message: 'Não autorizado' });
 
-    try {
-      const userToUpdate = await User.findById(user_id)
-      if (!userToUpdate) {
-        return res.status(404).send({ message: 'Usuário não encontrado' })
-      }
-
-      if (userToUpdate._id.toString() !== auth) {
-        return res.status(401).send({ message: 'Não Autorizado!' })
-      }
-
-      let updatedFields = {
-        name,
-        email,
-        password: hashPassword,
-        phone,
-        dateBirth,
-        gender,
-        location
-      }
-
-      if (password) {
-        const hashedPassword = await hashPassword(password)
-        updatedFields.password = hashedPassword
-      }
-
-      const updatedUser = await User.findByIdAndUpdate(
-        user_id,
-        { $set: updatedFields },
-        { new: true }
-      )
-
-      return res.status(200).send(updatedUser)
-    } catch (err) {
-      return res.status(400).send(err)
-    }
+  try {
+    const updatedUser = await User.findByIdAndUpdate(user_id, req.body, { new: true });
+    return res.status(200).send({ status: 'updated', user: updatedUser });
+  } catch (err) {
+    return res.status(400).send(err);
+  }
   }
 
 
