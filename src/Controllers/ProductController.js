@@ -1,5 +1,7 @@
+const moment = require('moment-timezone');
 const Product = require('../Models/Product')
 const User = require('../Models/User')
+const currentDateTime = moment().tz('America/Sao_Paulo').format('YYYY-MM-DD HH:mm:ss');
 
     const create = async (req, res) => {
         const { name, price, author, category, synopsis, year, state } = req.body
@@ -24,7 +26,8 @@ const User = require('../Models/User')
                 coordinates: [longitude, latitude]
             }
 
-            const createdProduct = await Product.create({name, price, user: user_id, location: setLocation, author, category, synopsis, year,  src: req.file.path,  state })
+            const createdProduct = await Product.create({name, price, user: user_id, location: setLocation, author, category, synopsis, year,  src: req.file.path,  state, createdAt: currentDateTime  })
+            req.body.createdAt = currentDateTime;
             const populatedProduct = await Product.findById(createdProduct._id).populate('user')
            
 
