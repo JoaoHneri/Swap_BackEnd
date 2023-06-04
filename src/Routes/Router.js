@@ -5,8 +5,6 @@ const ProductController = require('../Controllers/ProductController')
 const ProductPjController = require('../Controllers/ProductPjController')
 const multer = require('multer');
 const routes = Router()
-
-
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'uploads')
@@ -15,11 +13,7 @@ const storage = multer.diskStorage({
     cb(null, Date.now() + '-' + file.originalname)
   }
 });
-
 const upload = multer({ storage: storage });
-
-
-
 
 //User 
 routes.post('/user', UserController.create)
@@ -27,6 +21,9 @@ routes.get('/user/', UserController.index)
 routes.delete('/user/:user_id', UserController.deletedUser)
 routes.get('/user/:user_id', UserController.findUser) 
 routes.put('/user/:user_id', UserController.update);
+routes.post('/user/:user_id/favorites/:product_id', UserController.addToFavorites);
+routes.get('/user/:user_id/favorites', UserController.getFavorites);
+routes.delete('/user/:user_id/favorites/:product_id', UserController.removeFromFavorites);
 
 //Product 
 routes.post('/:user_id/product', upload.single('src'), ProductController.create)

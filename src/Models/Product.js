@@ -45,6 +45,10 @@ const Schema = new mongoose.Schema({
   state: {
     type: String,
     required: true
+  },
+  createdAt: {
+    type: String,
+    required: true
   }
 })
 
