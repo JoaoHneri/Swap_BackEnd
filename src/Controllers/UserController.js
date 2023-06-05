@@ -85,20 +85,26 @@ const index = async (req, res) => {
   }
 }
 
-const update = async(req, res) => {
-    const { user_id } = req.params;
-    const { auth } = req.headers;
-    const { name, email, password, phone, dateBirth, gender,} = req.body
+const update = async (req, res) => {
+  const { user_id } = req.params;
+  const { auth } = req.headers;
+  const { name, email, phone, dateBirth, gender, password } = req.body;
 
   if (user_id !== auth) return res.status(400).send({ message: 'Não autorizado' });
 
   try {
-    const updatedUser = await User.findByIdAndUpdate(user_id, req.body, { new: true });
+    let updatedUser = { name, email, phone, dateBirth, gender };
+    if (password) {
+
+      const hashedPassword = await bcrypt.hash(password, 10);
+      updatedUser.password = hashedPassword;
+    }
+    updatedUser = await User.findByIdAndUpdate(user_id, updatedUser, { new: true });
     return res.status(200).send({ status: 'updated', user: updatedUser });
   } catch (err) {
     return res.status(400).send(err);
   }
-  };
+};
 
 
 const addToFavorites = async (req, res) => {
