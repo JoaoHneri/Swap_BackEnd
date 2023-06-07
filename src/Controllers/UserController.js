@@ -47,15 +47,52 @@ const create = async (req, res) => {
     return res.status(400).send(err)
   }
 }
+const update = async(req, res) => {
+  const { user_id } = req.params;
+  const { auth } = req.headers;
+  const { name, email, password, phone, dateBirth, gender,} = req.body
+
+if (user_id !== auth) return res.status(400).send({ message: 'Não autorizado' });
+
+try {
+  const updatedUser = await User.findByIdAndUpdate(user_id, req.body, { new: true });
+  return res.status(200).send({ status: 'updated', user: updatedUser });
+} catch (err) {
+  return res.status(400).send(err);
+}
+}
+const updatePassword = async (req, res) => {
+  const { user_id } = req.params;
+  const { auth } = req.headers;
+  const { name, email, phone, dateBirth, gender, password, currentPassword } = req.body;
+  if (user_id !== auth) return res.status(400).send({ message: 'Não autorizado' });
+
+  try {
+    const user = await User.findById(user_id);
+    if (!user) return res.status(404).json({ message: 'Usuário não encontrado' });
+
+    const passwordMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!passwordMatch) return res.status(400).json({ message: 'Senha atual incorreta' });
+
+    let updatedUser = { name, email, phone, dateBirth, gender };
+    if (password) {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      updatedUser.password = hashedPassword;
+    }
+
+    updatedUser = await User.findByIdAndUpdate(user_id, updatedUser, { new: true });
+    return res.status(200).send({ status: 'atualizado', user: updatedUser });
+  } catch (err) {
+    return res.status(400).send(err);
+  }
+};
+
+
 
 const deletedUser = async (req, res) => {
   const { user_id } = req.params
-
   const { auth } = req.headers
-
   if (user_id !== auth) return res.status(400).send({ message: 'nao autorizando' })
-
-
   try {
     const deletedUser = await User.findByIdAndDelete(user_id)
     return res.status(200).send({ status: "deleted", user: deletedUser })
@@ -63,6 +100,7 @@ const deletedUser = async (req, res) => {
     return res.status(400).send(err)
   }
 }
+
 const findUser = async (req, res) => {
   const { user_id } = req.params
 
@@ -85,28 +123,6 @@ const index = async (req, res) => {
   }
 }
 
-const update = async (req, res) => {
-  const { user_id } = req.params;
-  const { auth } = req.headers;
-  const { name, email, phone, dateBirth, gender, password } = req.body;
-
-  if (user_id !== auth) return res.status(400).send({ message: 'Não autorizado' });
-
-  try {
-    let updatedUser = { name, email, phone, dateBirth, gender };
-    if (password) {
-
-      const hashedPassword = await bcrypt.hash(password, 10);
-      updatedUser.password = hashedPassword;
-    }
-    updatedUser = await User.findByIdAndUpdate(user_id, updatedUser, { new: true });
-    return res.status(200).send({ status: 'updated', user: updatedUser });
-  } catch (err) {
-    return res.status(400).send(err);
-  }
-};
-
-
 const addToFavorites = async (req, res) => {
   const { user_id, product_id } = req.params;
 
@@ -127,7 +143,6 @@ const addToFavorites = async (req, res) => {
     return res.status(400).json({ error: error.message });
   }
 };
-
 const getFavorites = async (req, res) => {
   const { user_id } = req.params;
 
@@ -163,6 +178,7 @@ const removeFromFavorites = async (req, res) => {
   }
 };
 
+
 module.exports = {
   create,
   deletedUser,
@@ -171,5 +187,6 @@ module.exports = {
   update,
   addToFavorites,
   getFavorites,
-  removeFromFavorites
+  removeFromFavorites,
+  updatePassword 
 }

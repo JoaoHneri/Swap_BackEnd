@@ -46,6 +46,10 @@ const Schema = new mongoose.Schema({
     type: String,
     required: true
   },
+  TypeBook: {
+    type: String,
+    required: true
+  },
   createdAt: {
     type: String,
     required: true

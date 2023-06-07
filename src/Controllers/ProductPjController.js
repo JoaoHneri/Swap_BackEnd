@@ -32,7 +32,8 @@ const currentDateTime = moment().tz('America/Sao_Paulo').format('YYYY-MM-DD HH:m
 
             return res.status(201).send(populatedProductPj)
         }catch(err){
-            console.log('foi aqui')
+            console.log(err.message)
+            
             return res.status(400).send(err)
         }
     }
