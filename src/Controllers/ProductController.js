@@ -4,7 +4,7 @@ const User = require('../Models/User')
 const currentDateTime = moment().tz('America/Sao_Paulo').format('YYYY-MM-DD HH:mm:ss');
 
     const create = async (req, res) => {
-        const { name, price, author, category, synopsis, year, state } = req.body
+        const { name, price, author, category, synopsis, year, state, allowTrade,  showOnMap } = req.body
 
         const { user_id } = req.params
 
@@ -26,7 +26,7 @@ const currentDateTime = moment().tz('America/Sao_Paulo').format('YYYY-MM-DD HH:m
                 coordinates: [longitude, latitude]
             }
 
-            const createdProduct = await Product.create({name, price, user: user_id, location: setLocation, author, category, synopsis, year,  src: req.file.path,  state, createdAt: currentDateTime  })
+            const createdProduct = await Product.create({name, price, user: user_id, location: setLocation, author, category, synopsis, year,  src: req.file.path,  state, createdAt: currentDateTime, allowTrade, showOnMap})
             req.body.createdAt = currentDateTime;
             const populatedProduct = await Product.findById(createdProduct._id).populate('user')
            

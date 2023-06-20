@@ -46,10 +46,15 @@ const Schema = new mongoose.Schema({
     type: String,
     required: true
   },
-  TypeBook: {
-    type: String,
-    required: true
+  allowTrade: {
+    type: Boolean,
+    default: false
   },
+  showOnMap: {
+    type: Boolean,
+    default: false
+  },
+
   createdAt: {
     type: String,
     required: true
