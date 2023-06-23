@@ -3,6 +3,10 @@ const UserController = require('../Controllers/UserController')
 const SessionController = require('../Controllers/SessionController')
 const ProductController = require('../Controllers/ProductController')
 const ProductPjController = require('../Controllers/ProductPjController')
+const ConversationController = require('../Controllers/ConversationController')
+
+
+
 const multer = require('multer');
 const routes = Router()
 const storage = multer.diskStorage({
@@ -14,6 +18,10 @@ const storage = multer.diskStorage({
   }
 });
 const upload = multer({ storage: storage });
+
+
+
+
 
 //User 
 routes.post('/user', UserController.create)
@@ -45,5 +53,28 @@ routes.get('/productPj/cords', ProductPjController.indexCords)
 routes.get('/productPj', ProductPjController.indexAll)
 routes.get('/productPj/:user_id', ProductPjController.indexByUser)
 routes.get('/productPj/this/:productPj_id', ProductPjController.indexProd)
+
+
+//chat
+
+// Rota para obter todas as conversas
+routes.get('/conversations', ConversationController.getAllChats);
+
+// Rota para criar uma nova conversa
+routes.post('/conversations', ConversationController.createChat);
+
+
+routes.post('/conversations/:chatId', ConversationController.addMessageToChat);
+
+// Rota para obter uma conversa por ID
+routes.get('/conversations/:id', ConversationController.getChatById);
+
+// Rota para obter uma conversa por ID do Sender Ou Reciever
+routes.get('/conversations/users/:id', ConversationController.getChatBySenderIdOrReceiverId);
+
+// Rota para excluir uma conversa por ID
+routes.delete('/conversations/:id', ConversationController.deleteChatById);
+
+module
 
 module.exports = routes
