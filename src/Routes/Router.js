@@ -60,18 +60,22 @@ routes.get('/productPj/this/:productPj_id', ProductPjController.indexProd)
 // Rota para obter todas as conversas
 routes.get('/conversations', ConversationController.getAllChats);
 
+routes.get('/conversations/find/:idProduct/:receiverId/:senderId', ConversationController.getChatByIdPorProducAndUser);
+
 // Rota para criar uma nova conversa
 routes.post('/conversations', ConversationController.createChat);
-
+routes.post('/chat', ConversationController.createOrAddMessageToChat)
 
 routes.post('/conversations/:chatId', ConversationController.addMessageToChat);
 
 // Rota para obter uma conversa por ID
 routes.get('/conversations/:id', ConversationController.getChatById);
 
+
 // Rota para obter uma conversa por ID do Sender Ou Reciever
 routes.get('/conversations/users/:id', ConversationController.getChatBySenderIdOrReceiverId);
 
+routes.get('/conversations/users/:senderId/:receiverId', ConversationController.findChatsBySenderAndReceiver);
 // Rota para excluir uma conversa por ID
 routes.delete('/conversations/:id', ConversationController.deleteChatById);
 
